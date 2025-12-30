@@ -1,0 +1,157 @@
+{
+    "name": "My workflow 2",
+    "nodes": [
+        {
+            "parameters": {
+                "httpMethod": "POST",
+                "path": "uxdoctor",
+                "responseMode": "responseNode",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.webhook",
+            "typeVersion": 2.1,
+            "position": [
+                64,
+                -80
+            ],
+            "id": "6b84d756-0d1e-470c-821e-300629dac0ca",
+            "name": "Webhook",
+            "webhookId": "0fc9536d-b169-48ce-a734-4b1db0ffec5d"
+        },
+        {
+            "parameters": {
+                "method": "POST",
+                "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+                "sendQuery": true,
+                "queryParameters": {
+                    "parameters": [
+                        {
+                            "name": "key",
+                            "value": "AIzaSyDy7bH1P2I4RzN4yRQGQisX3Kx7K4ftB70"
+                        }
+                    ]
+                },
+                "sendHeaders": true,
+                "headerParameters": {
+                    "parameters": [
+                        {
+                            "name": "Content-Type",
+                            "value": "application/json"
+                        }
+                    ]
+                },
+                "sendBody": true,
+                "specifyBody": "json",
+                "jsonBody": "={\n  \"contents\": [\n    {\n      \"role\": \"user\",\n      \"parts\": [\n        {\n          \"text\": \"You are 'UX Doctor', an elite UX Auditor.\\n\\nOBJECTIVE:\\nAnalyze the page data according to Don Norman's principles. You MUST act like a calculator for the final score.\\n\\n🔴 CRITICAL LANGUAGE INSTRUCTION:\\nAll text content (summary, insights, issue descriptions) MUST BE IN TURKISH.\\nHowever, the JSON KEYS (e.g., 'overallScore', 'issues', 'elementSelector') MUST remain in ENGLISH.\\n\\n🔢 CRITICAL MATH INSTRUCTION:\\nThe 'overallScore' MUST be the EXACT MATHEMATICAL AVERAGE of the 6 heuristic scores below. Do not estimate. Calculate: (s1+s2+s3+s4+s5+s6) / 6.\\n\\nFRAMEWORK (The 6 Principles):\\n1. Visibility (Görünürlük)\\n2. Feedback (Geribildirim)\\n3. Affordance (Sağlarlık)\\n4. Mapping (Eşleştirme)\\n5. Constraints (Kısıtlar)\\n6. Consistency (Tutarlılık)\\n\\nOUTPUT FORMAT (STRICT JSON ONLY):\\n{\\n  \\\"meta\\\": {\\n    \\\"analyzedUrl\\\": \\\"string\\\",\\n    \\\"overallScore\\\": number, // MUST BE AVERAGE OF HEURISTIC Scores\\n    \\\"summary\\\": \\\"Sayfa hakkında detaylı TÜRKÇE bir özet paragrafı.\\\"\\n  },\\n  \\\"heuristicScores\\\": {\\n    \\\"visibility\\\": number (0-100),\\n    \\\"feedback\\\": number (0-100),\\n    \\\"affordance\\\": number (0-100),\\n    \\\"mapping\\\": number (0-100),\\n    \\\"constraints\\\": number (0-100),\\n    \\\"consistency\\\": number (0-100)\\n  },\\n  \\\"issues\\\": [\\n    {\\n      \\\"id\\\": \\\"unique_id_x\\\",\\n      \\\"principle\\\": \\\"Affordance\\\",\\n      \\\"impactScore\\\": number,\\n      \\\"oneSentenceInsight\\\": \\\"Sorunu ve neden önemli olduğunu anlatan tek, vurucu bir TÜRKÇE cümle.\\\",\\n      \\\"elementSelector\\\": \\\"string (e.g., .nav-button)\\\",\\n      \\\"fixCode\\\": \\\"string (CSS code)\\\"\\n    }\\n  ]\\n}\\n\\nINPUT DATA:\\n{{$json}}\"\n        }\n      ]\n    }\n  ],\n  \"generationConfig\": {\n    \"response_mime_type\": \"application/json\"\n  }\n}",
+                "options": {}
+            },
+            "type": "n8n-nodes-base.httpRequest",
+            "typeVersion": 4.3,
+            "position": [
+                272,
+                -80
+            ],
+            "id": "2f2758db-bedf-44b5-ba18-48d41ad5936a",
+            "name": "HTTP Request"
+        },
+        {
+            "parameters": {
+                "assignments": {
+                    "assignments": [
+                        {
+                            "id": "5e16af0b-9713-4e5b-a92b-732aeac21f80",
+                            "name": "ux_report",
+                            "value": "={{$json.candidates[0].content.parts[0].text}}",
+                            "type": "string"
+                        }
+                    ]
+                },
+                "options": {}
+            },
+            "type": "n8n-nodes-base.set",
+            "typeVersion": 3.4,
+            "position": [
+                432,
+                -80
+            ],
+            "id": "bdfb6c9f-846f-49ae-8a1b-099a0a1203d1",
+            "name": "Edit Fields"
+        },
+        {
+            "parameters": {
+                "options": {
+                    "responseCode": 200,
+                    "responseHeaders": {
+                        "entries": [
+                            {
+                                "name": "Content-Type",
+                                "value": "application/json"
+                            }
+                        ]
+                    }
+                }
+            },
+            "type": "n8n-nodes-base.respondToWebhook",
+            "typeVersion": 1.5,
+            "position": [
+                608,
+                -80
+            ],
+            "id": "7ec4eb43-4172-41a4-9c00-b1e59b69faf7",
+            "name": "Respond to Webhook"
+        }
+    ],
+    "pinData": {
+        "Webhook": [
+            {
+                "json": {}
+            }
+        ]
+    },
+    "connections": {
+        "Webhook": {
+            "main": [
+                [
+                    {
+                        "node": "HTTP Request",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "HTTP Request": {
+            "main": [
+                [
+                    {
+                        "node": "Edit Fields",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        },
+        "Edit Fields": {
+            "main": [
+                [
+                    {
+                        "node": "Respond to Webhook",
+                        "type": "main",
+                        "index": 0
+                    }
+                ]
+            ]
+        }
+    },
+    "active": true,
+    "settings": {
+        "executionOrder": "v1",
+        "availableInMCP": false
+    },
+    "versionId": "68847e57-a7f6-4362-8243-051df1f54277",
+    "meta": {
+        "instanceId": "30670555f28c00c8bf98676c36c1cbabd19b6b3c0c2f592e6b831acd0006b68f"
+    },
+    "id": "dP80Q4kptGPLH3Yl",
+    "tags": []
+}

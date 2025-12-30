@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UX Doktor</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">🩺</div>
+                <div class="header-text">
+                    <h1>UX Doktor</h1>
+                    <p class="subtitle">Don Norman İlkeleri ile Analiz</p>
+                </div>
+            </div>
+        </header>
+
+        <div class="status" id="status">
+            <div class="status-indicator">
+                <span class="status-icon pulse">✨</span>
+                <div class="status-content">
+                    <span class="status-text">Hazır</span>
+                    <span class="status-subtext">Analiz başlatmak için butona tıklayın</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-buttons">
+            <button id="analyzeBtn" class="btn btn-primary">
+                <span class="btn-icon">🔍</span>
+                <span class="btn-content">
+                    <span class="btn-text">Analiz Başlat</span>
+                    <span class="btn-subtext">Mevcut sayfayı değerlendir</span>
+                </span>
+            </button>
+            <button id="settingsBtn" class="btn btn-secondary">
+                <span class="btn-icon">⚙️</span>
+                <span>Ayarlar</span>
+            </button>
+        </div>
+
+        <div class="settings-panel" id="settingsPanel" style="display: none;">
+            <h3>Webhook Ayarları</h3>
+            <input 
+                type="text" 
+                id="webhookUrl" 
+                placeholder="n8n webhook URL"
+                value="https://alinursin.app.n8n.cloud/webhook/ux-doctor"
+            />
+            <button id="saveSettings" class="btn btn-small">Kaydet</button>
+        </div>
+
+        <div class="results" id="results" style="display: none;">
+            <div class="score-container">
+                <div class="score-wrapper">
+                    <div class="score-circle">
+                        <div class="score" id="score">--</div>
+                        <svg class="score-ring" width="120" height="120">
+                            <circle cx="60" cy="60" r="54" class="score-ring-bg"/>
+                            <circle cx="60" cy="60" r="54" class="score-ring-progress" id="scoreRing"/>
+                        </svg>
+                    </div>
+                    <div class="score-label">
+                        <span class="score-title">UX Skoru</span>
+                        <span class="score-subtitle" id="scoreSubtitle">100 üzerinden</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ai-summary" id="aiSummary" style="display: none;"></div>
+
+            <div class="principles">
+                <h3>� İlke Değerlendirmesi</h3>
+                <div class="principle-grid">
+                    <div class="principle-item" data-principle="visibility">
+                        <div class="principle-icon" id="icon-visibility">◯</div>
+                        <div class="principle-info">
+                            <span class="principle-name">Visibility</span>
+                            <span class="principle-desc">Görünürlük</span>
+                        </div>
+                    </div>
+                    <div class="principle-item" data-principle="feedback">
+                        <div class="principle-icon" id="icon-feedback">◯</div>
+                        <div class="principle-info">
+                            <span class="principle-name">Feedback</span>
+                            <span class="principle-desc">Geri Bildirim</span>
+                        </div>
+                    </div>
+                    <div class="principle-item" data-principle="constraints">
+                        <div class="principle-icon" id="icon-constraints">◯</div>
+                        <div class="principle-info">
+                            <span class="principle-name">Constraints</span>
+                            <span class="principle-desc">Kısıtlamalar</span>
+                        </div>
+                    </div>
+                    <div class="principle-item" data-principle="consistency">
+                        <div class="principle-icon" id="icon-consistency">◯</div>
+                        <div class="principle-info">
+                            <span class="principle-name">Consistency</span>
+                            <span class="principle-desc">Tutarlılık</span>
+                        </div>
+                    </div>
+                    <div class="principle-item" data-principle="affordance">
+                        <div class="principle-icon" id="icon-affordance">◯</div>
+                        <div class="principle-info">
+                            <span class="principle-name">Affordance</span>
+                            <span class="principle-desc">Kullanılabilirlik</span>
+                        </div>
+                    </div>
+                    <div class="principle-item" data-principle="mapping">
+                        <div class="principle-icon" id="icon-mapping">◯</div>
+                        <div class="principle-info">
+                            <span class="principle-name">Mapping</span>
+                            <span class="principle-desc">Eşleme</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="issues" id="issues"></div>
+
+            <div class="action-buttons-bottom">
+                <button id="detailsBtn" class="btn btn-outline">
+                    <span class="btn-icon">�</span>
+                    <span>Detaylı Rapor Görüntüle</span>
+                </button>
+            </div>
+        </div>
+
+        <footer>
+            <p>Don Norman Prensipleri © 2025</p>
+        </footer>
+    </div>
+
+    <script src="analyzer.js"></script>
+    <script src="popup.js"></script>
+</body>
+</html>
